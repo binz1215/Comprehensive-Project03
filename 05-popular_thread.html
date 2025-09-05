@@ -1,70 +1,201 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ThRead - Popular Thread</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
-    <style>
-      /* 폰트 정의 */
-      @font-face {
-        font-family: "SBAggro_L";
-        src: url("assets/fonts/SBAggroOTF_L.ttf") format("ttf");
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ThRead - Popular Thread</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <style>
+    /* 폰트 정의 (format 수정) */
+    @font-face {
+      font-family: "SBAggro_L";
+      src: url("assets/fonts/SBAggroOTF_L.ttf") format("truetype");
+    }
+
+    @font-face {
+      font-family: "GmarketSansTTFMedium";
+      src: url("assets/fonts/GmarketSansTTFMedium.ttf") format("truetype");
+    }
+
+    /* 섹션 폭 80% + 중앙 정렬 */
+    .thread .wrap {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    /* 카드 이미지 높이 고정 */
+    .thread-card-img {
+      width: 100%;
+      height: 180px;
+      /* 고정 높이 */
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* 카드 하단(저자/도서명) 아래 고정 */
+    .thread-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .thread-card .card-footer {
+      margin-top: auto;
+      background: transparent;
+      border-top: 0;
+    }
+
+    /* 도서명 강조 색 */
+    .book-name {
+      color: #fe4a51;
+    }
+
+    /* 헤더 타이틀 약간 여백 */
+    .popular-thread .section-title {
+      margin-bottom: .25rem;
+      font-family: "GmarketSansTTFMedium", sans-serif;
+    }
+
+    /* Pagination: Bootstrap보다 높은 명시도로 커스터마이즈 */
+    .thread nav[aria-label="Page navigation"] .pagination .page-link {
+      border: none;
+      /* 테두리 제거 */
+      background: transparent;
+      /* 배경 투명 */
+      color: #333;
+      padding: .5rem .75rem;
+    }
+
+    .thread nav[aria-label="Page navigation"] .pagination .page-item.active .page-link {
+      color: #fe4a51;
+      /* 활성 페이지 색상 */
+      background: transparent;
+    }
+
+    .thread nav[aria-label="Page navigation"] .pagination .page-link:focus {
+      box-shadow: none;
+    }
+
+    /* 412~767px에서 2열 */
+    @media (min-width: 413px) and (max-width: 767.98px) {
+      .thread .row>[class*="col-"] {
+        width: 50%;
       }
-      @font-face {
-        font-family: "GmarketSansTTFMedium";
-        src: url("assets/fonts/GmarketSansTTFMedium.ttf") format("ttf");
-      }
-    </style>
-  </head>
-  <body>
-    <!-- 인기 쓰레드 섹션 -->
-    <section class="thread py-5 bg-light">
-      <div class="popular-thread">
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 인기 쓰레드 섹션 -->
+  <section class="thread py-5 bg-light">
+    <div class="wrap">
+      <div class="popular-thread text-center mb-4">
         <h3 class="section-title">지금 이 쓰레드</h3>
-        <h3 class="section-subtitle">최근 사람들이 많이 공감한 게시글입니다</h3>
+        <h6 class="section-subtitle text-muted">최근 사람들이 많이 공감한 게시글입니다</h6>
       </div>
-      <div class="container">
-        <div class="row">
-          <!-- 
-            [과제 안내]
-            아래 영역에 Bootstrap의 card 컴포넌트를 활용하여
-            인기 쓰레드 목록을 출력하는 코드를 작성하세요.
-            
-            각 카드에는 다음 내용을 포함해야 합니다:
-              - 카드 상단: 고정 높이의 이미지
-              - 카드 본문: 쓰레드 제목와 본문 요약
-              - 카드 하단: 게시글 저자와 도서 이름 출력
-            
-            카드들은 Bootstrap의 grid 시스템을 사용하여 배치합니다.
-          -->
-          <!-- 코드는 여기에 작성하시오 -->
+
+      <!-- 그리드 컨테이너 -->
+      <div class="container px-0">
+        <div class="row g-4" id="threadGrid">
+          <!-- 카드 1 -->
+          <div class="col-12 col-md-4">
+            <div class="card thread-card">
+              <img src="assets/threads/img1.jpg" class="thread-card-img" alt="thread 1">
+              <div class="card-body">
+                <h5 class="card-title">“몰입 독서”를 위한 나만의 루틴</h5>
+                <p class="card-text text-muted">아침 30분을 확보하는 법, 하이라이트 정리 팁, 챕터별 질문 리스트를 공유합니다.</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">by 홍길동 · <span class="book-name">몰입의 순간</span></small>
+              </div>
+            </div>
+          </div>
+          <!-- 카드 2 -->
+          <div class="col-12 col-md-4">
+            <div class="card thread-card">
+              <img src="assets/threads/img2.jpg" class="thread-card-img" alt="thread 2">
+              <div class="card-body">
+                <h5 class="card-title">메모 습관이 독서를 바꿨다</h5>
+                <p class="card-text text-muted">페이지별 키워드 추출과 독서 노트 템플릿을 소개합니다.</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">by 이서연 · <span class="book-name">생각의 기원</span></small>
+              </div>
+            </div>
+          </div>
+          <!-- 카드 3 -->
+          <div class="col-12 col-md-4">
+            <div class="card thread-card">
+              <img src="assets/threads/img3.jpg" class="thread-card-img" alt="thread 3">
+              <div class="card-body">
+                <h5 class="card-title">SF 소설로 배우는 상상력 훈련</h5>
+                <p class="card-text text-muted">세계관 정리법과 등장인물 트래킹 노하우를 정리했어요.</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">by 김도현 · <span class="book-name">유년기의 끝</span></small>
+              </div>
+            </div>
+          </div>
+          <!-- 카드 4 -->
+          <div class="col-12 col-md-4">
+            <div class="card thread-card">
+              <img src="assets/threads/img4.jpg" class="thread-card-img" alt="thread 4">
+              <div class="card-body">
+                <h5 class="card-title">하루 20분, 고전 읽기의 기술</h5>
+                <p class="card-text text-muted">주당 챕터 계획과 난이도 조절 팁을 공유합니다.</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">by 박지민 · <span class="book-name">국가</span></small>
+              </div>
+            </div>
+          </div>
+          <!-- 카드 5 -->
+          <div class="col-12 col-md-4">
+            <div class="card thread-card">
+              <img src="assets/threads/img5.jpg" class="thread-card-img" alt="thread 5">
+              <div class="card-body">
+                <h5 class="card-title">논픽션 요약 스킬 3단계</h5>
+                <p class="card-text text-muted">핵심 문장 표시 → 근거 묶기 → 액션아이템 도출 순서로!</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">by 최은우 · <span class="book-name">사피엔스</span></small>
+              </div>
+            </div>
+          </div>
+          <!-- 카드 6 -->
+          <div class="col-12 col-md-4">
+            <div class="card thread-card">
+              <img src="assets/threads/img6.jpg" class="thread-card-img" alt="thread 6">
+              <div class="card-body">
+                <h5 class="card-title">밤 독서가 잘 맞는 사람들을 위해</h5>
+                <p class="card-text text-muted">조용한 플레이리스트와 조명 색온도 추천.</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">by 장하늘 · <span class="book-name">나의 밤은 당신의 낮보다 아름답다</span></small>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
       <!-- Pagination -->
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center mt-4">
-          <!-- 
-            [과제 안내]
-            Bootstrap의 pagination 컴포넌트를 활용하여
-            페이지 네비게이션을 구현하세요.
-            - 각 페이지 번호의 테두리는 없애고 배경은 투명하게 설정
-            - 활성화된 페이지 번호의 텍스트 색상은 #fe4a51로 설정
-          -->
-          <!-- 코드는 여기에 작성하시오 -->
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item active" aria-current="page"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">4</a></li>
         </ul>
       </nav>
-    </section>
-    <!-- Bootstrap JS -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    </div>
+  </section>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+
 </html>
